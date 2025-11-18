@@ -1,0 +1,22 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "asckido1623",
+    "database": "bookreviewdb",
+    "host": "localhost",
+    "port": 5432,
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "postgres",
+    "password": "asckido1623",
+    "database": "bookreviewdb_test",
+    "host": "localhost",
+    "port": 5432,
+    "dialect": "postgres"
+  },
+  "production": {
+    "use_env_variable": "DATABASE_URL",
+    "dialect": "postgres"
+  }
+}

@@ -1,0 +1,137 @@
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
+import { sequelizeInstance as sequelize } from "./models/index.js";
+import authRoutes from "./routes/auth.js";
+import bookRoutes from "./routes/books.js";
+import reviewRoutes from "./routes/reviews.js";
+
+dotenv.config();
+
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+// Swagger definition
+const swaggerDefinition = {
+  openapi: "3.0.0",
+  info: {
+    title: "Book Review API",
+    version: "1.0.0",
+    description: "API For Managing Books Review",
+  },
+  servers: [
+    {
+      url: "http://localhost:5000",
+      description: "Development server",
+    },
+    {
+      url:
+        process.env.RAILWAY_STATIC_URL ||
+        "https://your-railway-app.up.railway.app",
+      description: "Production server",
+    },
+  ],
+  components: {
+    securitySchemes: {
+      bearerAuth: {
+        type: "http",
+        scheme: "bearer",
+        bearerFormat: "JWT",
+      },
+    },
+    schemas: {
+      Book: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          title: {
+            type: "string",
+          },
+          author: {
+            type: "string",
+          },
+          genre: {
+            type: "string",
+          },
+          description: {
+            type: "string",
+          },
+          publishedYear: {
+            type: "integer",
+          },
+          createdAt: {
+            type: "string",
+            format: "date-time",
+          },
+          updatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+        },
+      },
+      Review: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          rating: {
+            type: "integer",
+            minimum: 1,
+            maximum: 5,
+          },
+          comment: {
+            type: "string",
+          },
+          bookId: {
+            type: "integer",
+          },
+          userId: {
+            type: "integer",
+          },
+          createdAt: {
+            type: "string",
+            format: "date-time",
+          },
+          updatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+        },
+      },
+    },
+  },
+};
+
+const options = {
+  swaggerDefinition,
+  apis: ["./routes/*.js"],
+};
+
+const swaggerSpec = swaggerJSDoc(options);
+
+// Swagger UI route
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+app.use(cors());
+app.use(express.json());
+
+app.use("/api/auth", authRoutes);
+app.use("/api/books", bookRoutes);
+app.use("/api/reviews", reviewRoutes);
+
+sequelize
+  .sync()
+  .then(() => {
+    console.log("Database connected");
+    app.listen(PORT, () => {
+      console.log(`Server running on address: http://localhost:${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("Unable to connect to the database:", err);
+  });
