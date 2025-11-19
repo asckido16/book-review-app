@@ -1,3 +1,4 @@
+/*! For license information please see bundle.js.LICENSE.txt */
 (() => {
   "use strict";
   var t,
@@ -14088,10 +14089,16 @@
     xo = function (t) {
       return fo.get("/books/".concat(t, "/reviews"));
     },
-    yo = function (t, e) {
+    yo = function () {
+      return fo.get("/reviews/user");
+    },
+    wo = function (t, e) {
       return fo.post("/books/".concat(t, "/reviews"), e);
+    },
+    ko = function (t) {
+      return fo.delete("/reviews/".concat(t));
     };
-  function wo() {
+  function So() {
     var t,
       e,
       r = "function" == typeof Symbol ? Symbol : {},
@@ -14101,7 +14108,7 @@
       var s = o && o.prototype instanceof l ? o : l,
         d = Object.create(s.prototype);
       return (
-        ko(
+        Eo(
           d,
           "_invoke",
           (function (r, o, n) {
@@ -14191,7 +14198,7 @@
     e = Object.getPrototypeOf;
     var c = [][o]
         ? e(e([][o]()))
-        : (ko((e = {}), o, function () {
+        : (Eo((e = {}), o, function () {
             return this;
           }),
           e),
@@ -14200,40 +14207,40 @@
       return (
         Object.setPrototypeOf
           ? Object.setPrototypeOf(t, d)
-          : ((t.__proto__ = d), ko(t, n, "GeneratorFunction")),
+          : ((t.__proto__ = d), Eo(t, n, "GeneratorFunction")),
         (t.prototype = Object.create(u)),
         t
       );
     }
     return (
       (s.prototype = d),
-      ko(u, "constructor", d),
-      ko(d, "constructor", s),
+      Eo(u, "constructor", d),
+      Eo(d, "constructor", s),
       (s.displayName = "GeneratorFunction"),
-      ko(d, n, "GeneratorFunction"),
-      ko(u),
-      ko(u, n, "Generator"),
-      ko(u, o, function () {
+      Eo(d, n, "GeneratorFunction"),
+      Eo(u),
+      Eo(u, n, "Generator"),
+      Eo(u, o, function () {
         return this;
       }),
-      ko(u, "toString", function () {
+      Eo(u, "toString", function () {
         return "[object Generator]";
       }),
-      (wo = function () {
+      (So = function () {
         return { w: a, m: p };
       })()
     );
   }
-  function ko(t, e, r, o) {
+  function Eo(t, e, r, o) {
     var n = Object.defineProperty;
     try {
       n({}, "", {});
     } catch (t) {
       n = 0;
     }
-    (ko = function (t, e, r, o) {
+    (Eo = function (t, e, r, o) {
       function a(e, r) {
-        ko(t, e, function (t) {
+        Eo(t, e, function (t) {
           return this._invoke(e, r, t);
         });
       }
@@ -14248,9 +14255,9 @@
           : (t[e] = r)
         : (a("next", 0), a("throw", 1), a("return", 2));
     }),
-      ko(t, e, r, o);
+      Eo(t, e, r, o);
   }
-  function So(t, e, r, o, n, a, i) {
+  function zo(t, e, r, o, n, a, i) {
     try {
       var l = t[a](i),
         s = l.value;
@@ -14259,7 +14266,7 @@
     }
     l.done ? e(s) : Promise.resolve(s).then(o, n);
   }
-  function Eo(t, e) {
+  function jo(t, e) {
     return (
       (function (t) {
         if (Array.isArray(t)) return t;
@@ -14304,7 +14311,7 @@
       })(t, e) ||
       (function (t, e) {
         if (t) {
-          if ("string" == typeof t) return zo(t, e);
+          if ("string" == typeof t) return Co(t, e);
           var r = {}.toString.call(t).slice(8, -1);
           return (
             "Object" === r && t.constructor && (r = t.constructor.name),
@@ -14312,7 +14319,7 @@
               ? Array.from(t)
               : "Arguments" === r ||
                 /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(r)
-              ? zo(t, e)
+              ? Co(t, e)
               : void 0
           );
         }
@@ -14324,19 +14331,19 @@
       })()
     );
   }
-  function zo(t, e) {
+  function Co(t, e) {
     (null == e || e > t.length) && (e = t.length);
     for (var r = 0, o = Array(e); r < e; r++) o[r] = t[r];
     return o;
   }
-  const jo = function () {
-    var t = Eo((0, l.useState)([]), 2),
+  const Ro = function () {
+    var t = jo((0, l.useState)([]), 2),
       e = t[0],
       r = t[1],
-      o = Eo((0, l.useState)(""), 2),
+      o = jo((0, l.useState)(""), 2),
       n = o[0],
       a = o[1],
-      i = Eo((0, l.useState)(!0), 2),
+      i = jo((0, l.useState)(!0), 2),
       s = i[0],
       d = i[1];
     (0, l.useEffect)(
@@ -14348,9 +14355,9 @@
     var c = (function () {
       var t,
         e =
-          ((t = wo().m(function t() {
+          ((t = So().m(function t() {
             var e, o;
-            return wo().w(
+            return So().w(
               function (t) {
                 for (;;)
                   switch ((t.p = t.n)) {
@@ -14380,10 +14387,10 @@
             return new Promise(function (o, n) {
               var a = t.apply(e, r);
               function i(t) {
-                So(a, o, n, i, l, "next", t);
+                zo(a, o, n, i, l, "next", t);
               }
               function l(t) {
-                So(a, o, n, i, l, "throw", t);
+                zo(a, o, n, i, l, "throw", t);
               }
               i(void 0);
             });
@@ -14459,7 +14466,7 @@
           )
         );
   };
-  function Co() {
+  function Oo() {
     var t,
       e,
       r = "function" == typeof Symbol ? Symbol : {},
@@ -14469,7 +14476,7 @@
       var s = o && o.prototype instanceof l ? o : l,
         d = Object.create(s.prototype);
       return (
-        Ro(
+        No(
           d,
           "_invoke",
           (function (r, o, n) {
@@ -14559,7 +14566,7 @@
     e = Object.getPrototypeOf;
     var c = [][o]
         ? e(e([][o]()))
-        : (Ro((e = {}), o, function () {
+        : (No((e = {}), o, function () {
             return this;
           }),
           e),
@@ -14568,40 +14575,40 @@
       return (
         Object.setPrototypeOf
           ? Object.setPrototypeOf(t, d)
-          : ((t.__proto__ = d), Ro(t, n, "GeneratorFunction")),
+          : ((t.__proto__ = d), No(t, n, "GeneratorFunction")),
         (t.prototype = Object.create(u)),
         t
       );
     }
     return (
       (s.prototype = d),
-      Ro(u, "constructor", d),
-      Ro(d, "constructor", s),
+      No(u, "constructor", d),
+      No(d, "constructor", s),
       (s.displayName = "GeneratorFunction"),
-      Ro(d, n, "GeneratorFunction"),
-      Ro(u),
-      Ro(u, n, "Generator"),
-      Ro(u, o, function () {
+      No(d, n, "GeneratorFunction"),
+      No(u),
+      No(u, n, "Generator"),
+      No(u, o, function () {
         return this;
       }),
-      Ro(u, "toString", function () {
+      No(u, "toString", function () {
         return "[object Generator]";
       }),
-      (Co = function () {
+      (Oo = function () {
         return { w: a, m: p };
       })()
     );
   }
-  function Ro(t, e, r, o) {
+  function No(t, e, r, o) {
     var n = Object.defineProperty;
     try {
       n({}, "", {});
     } catch (t) {
       n = 0;
     }
-    (Ro = function (t, e, r, o) {
+    (No = function (t, e, r, o) {
       function a(e, r) {
-        Ro(t, e, function (t) {
+        No(t, e, function (t) {
           return this._invoke(e, r, t);
         });
       }
@@ -14616,9 +14623,9 @@
           : (t[e] = r)
         : (a("next", 0), a("throw", 1), a("return", 2));
     }),
-      Ro(t, e, r, o);
+      No(t, e, r, o);
   }
-  function Oo(t, e, r, o, n, a, i) {
+  function _o(t, e, r, o, n, a, i) {
     try {
       var l = t[a](i),
         s = l.value;
@@ -14627,23 +14634,23 @@
     }
     l.done ? e(s) : Promise.resolve(s).then(o, n);
   }
-  function No(t) {
+  function Po(t) {
     return function () {
       var e = this,
         r = arguments;
       return new Promise(function (o, n) {
         var a = t.apply(e, r);
         function i(t) {
-          Oo(a, o, n, i, l, "next", t);
+          _o(a, o, n, i, l, "next", t);
         }
         function l(t) {
-          Oo(a, o, n, i, l, "throw", t);
+          _o(a, o, n, i, l, "throw", t);
         }
         i(void 0);
       });
     };
   }
-  function _o(t, e) {
+  function To(t, e) {
     return (
       (function (t) {
         if (Array.isArray(t)) return t;
@@ -14688,7 +14695,7 @@
       })(t, e) ||
       (function (t, e) {
         if (t) {
-          if ("string" == typeof t) return Po(t, e);
+          if ("string" == typeof t) return Ao(t, e);
           var r = {}.toString.call(t).slice(8, -1);
           return (
             "Object" === r && t.constructor && (r = t.constructor.name),
@@ -14696,7 +14703,7 @@
               ? Array.from(t)
               : "Arguments" === r ||
                 /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(r)
-              ? Po(t, e)
+              ? Ao(t, e)
               : void 0
           );
         }
@@ -14708,33 +14715,33 @@
       })()
     );
   }
-  function Po(t, e) {
+  function Ao(t, e) {
     (null == e || e > t.length) && (e = t.length);
     for (var r = 0, o = Array(e); r < e; r++) o[r] = t[r];
     return o;
   }
-  const To = function () {
+  const Lo = function () {
     var t = (function () {
         let { matches: t } = l.useContext(X),
           e = t[t.length - 1];
         return e ? e.params : {};
       })().id,
-      e = _o((0, l.useState)(null), 2),
+      e = To((0, l.useState)(null), 2),
       r = e[0],
       o = e[1],
-      n = _o((0, l.useState)([]), 2),
+      n = To((0, l.useState)([]), 2),
       a = n[0],
       i = n[1],
-      s = _o((0, l.useState)(5), 2),
+      s = To((0, l.useState)(5), 2),
       d = s[0],
       c = s[1],
-      u = _o((0, l.useState)(""), 2),
+      u = To((0, l.useState)(""), 2),
       p = u[0],
       b = u[1],
-      m = _o((0, l.useState)(!0), 2),
+      m = To((0, l.useState)(!0), 2),
       f = m[0],
       g = m[1],
-      v = _o((0, l.useState)(""), 2),
+      v = To((0, l.useState)(""), 2),
       h = v[0],
       x = v[1];
     (0, l.useEffect)(
@@ -14744,10 +14751,10 @@
       [t]
     );
     var y = (function () {
-        var e = No(
-          Co().m(function e() {
+        var e = Po(
+          Oo().m(function e() {
             var r, n, a, l, s;
-            return Co().w(
+            return Oo().w(
               function (e) {
                 for (;;)
                   switch ((e.p = e.n)) {
@@ -14755,7 +14762,7 @@
                       return (e.p = 0), (e.n = 1), Promise.all([vo(t), xo(t)]);
                     case 1:
                       (r = e.v),
-                        (n = _o(r, 2)),
+                        (n = To(r, 2)),
                         (a = n[0]),
                         (l = n[1]),
                         o(a.data),
@@ -14784,9 +14791,9 @@
         };
       })(),
       w = (function () {
-        var e = No(
-          Co().m(function e(r) {
-            return Co().w(
+        var e = Po(
+          Oo().m(function e(r) {
+            return Oo().w(
               function (e) {
                 for (;;)
                   switch ((e.p = e.n)) {
@@ -14800,7 +14807,7 @@
                       return (
                         (e.p = 1),
                         (e.n = 2),
-                        yo(t, { rating: parseInt(d), review: p })
+                        wo(t, { rating: parseInt(d), review: p })
                       );
                     case 2:
                       b(""), c(5), y(), (e.n = 4);
@@ -14912,7 +14919,7 @@
             )
         );
   };
-  function Ao() {
+  function Fo() {
     var t,
       e,
       r = "function" == typeof Symbol ? Symbol : {},
@@ -14922,7 +14929,7 @@
       var s = o && o.prototype instanceof l ? o : l,
         d = Object.create(s.prototype);
       return (
-        Lo(
+        Uo(
           d,
           "_invoke",
           (function (r, o, n) {
@@ -15012,7 +15019,7 @@
     e = Object.getPrototypeOf;
     var c = [][o]
         ? e(e([][o]()))
-        : (Lo((e = {}), o, function () {
+        : (Uo((e = {}), o, function () {
             return this;
           }),
           e),
@@ -15021,40 +15028,40 @@
       return (
         Object.setPrototypeOf
           ? Object.setPrototypeOf(t, d)
-          : ((t.__proto__ = d), Lo(t, n, "GeneratorFunction")),
+          : ((t.__proto__ = d), Uo(t, n, "GeneratorFunction")),
         (t.prototype = Object.create(u)),
         t
       );
     }
     return (
       (s.prototype = d),
-      Lo(u, "constructor", d),
-      Lo(d, "constructor", s),
+      Uo(u, "constructor", d),
+      Uo(d, "constructor", s),
       (s.displayName = "GeneratorFunction"),
-      Lo(d, n, "GeneratorFunction"),
-      Lo(u),
-      Lo(u, n, "Generator"),
-      Lo(u, o, function () {
+      Uo(d, n, "GeneratorFunction"),
+      Uo(u),
+      Uo(u, n, "Generator"),
+      Uo(u, o, function () {
         return this;
       }),
-      Lo(u, "toString", function () {
+      Uo(u, "toString", function () {
         return "[object Generator]";
       }),
-      (Ao = function () {
+      (Fo = function () {
         return { w: a, m: p };
       })()
     );
   }
-  function Lo(t, e, r, o) {
+  function Uo(t, e, r, o) {
     var n = Object.defineProperty;
     try {
       n({}, "", {});
     } catch (t) {
       n = 0;
     }
-    (Lo = function (t, e, r, o) {
+    (Uo = function (t, e, r, o) {
       function a(e, r) {
-        Lo(t, e, function (t) {
+        Uo(t, e, function (t) {
           return this._invoke(e, r, t);
         });
       }
@@ -15069,9 +15076,9 @@
           : (t[e] = r)
         : (a("next", 0), a("throw", 1), a("return", 2));
     }),
-      Lo(t, e, r, o);
+      Uo(t, e, r, o);
   }
-  function Fo(t, e, r, o, n, a, i) {
+  function Bo(t, e, r, o, n, a, i) {
     try {
       var l = t[a](i),
         s = l.value;
@@ -15080,7 +15087,23 @@
     }
     l.done ? e(s) : Promise.resolve(s).then(o, n);
   }
-  function Uo(t, e) {
+  function Mo(t) {
+    return function () {
+      var e = this,
+        r = arguments;
+      return new Promise(function (o, n) {
+        var a = t.apply(e, r);
+        function i(t) {
+          Bo(a, o, n, i, l, "next", t);
+        }
+        function l(t) {
+          Bo(a, o, n, i, l, "throw", t);
+        }
+        i(void 0);
+      });
+    };
+  }
+  function Do(t, e) {
     return (
       (function (t) {
         if (Array.isArray(t)) return t;
@@ -15125,7 +15148,7 @@
       })(t, e) ||
       (function (t, e) {
         if (t) {
-          if ("string" == typeof t) return Bo(t, e);
+          if ("string" == typeof t) return Io(t, e);
           var r = {}.toString.call(t).slice(8, -1);
           return (
             "Object" === r && t.constructor && (r = t.constructor.name),
@@ -15133,7 +15156,7 @@
               ? Array.from(t)
               : "Arguments" === r ||
                 /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(r)
-              ? Bo(t, e)
+              ? Io(t, e)
               : void 0
           );
         }
@@ -15145,40 +15168,40 @@
       })()
     );
   }
-  function Bo(t, e) {
+  function Io(t, e) {
     (null == e || e > t.length) && (e = t.length);
     for (var r = 0, o = Array(e); r < e; r++) o[r] = t[r];
     return o;
   }
-  const Mo = function () {
-    var t = Uo((0, l.useState)([]), 2),
-      e = (t[0], t[1]),
-      r = Uo((0, l.useState)(!0), 2),
-      o = r[0],
-      n = r[1];
+  const $o = function () {
+    var t = Do((0, l.useState)([]), 2),
+      e = t[0],
+      r = t[1],
+      o = Do((0, l.useState)(!0), 2),
+      n = o[0],
+      a = o[1];
     (0, l.useEffect)(function () {
-      a();
+      i();
     }, []);
-    var a = (function () {
-      var t,
-        r =
-          ((t = Ao().m(function t() {
-            var r, o;
-            return Ao().w(
+    var i = (function () {
+        var t = Mo(
+          Fo().m(function t() {
+            var e, o;
+            return Fo().w(
               function (t) {
                 for (;;)
                   switch ((t.p = t.n)) {
                     case 0:
-                      return (t.p = 0), (t.n = 1), go();
+                      return (t.p = 0), (t.n = 1), yo();
                     case 1:
-                      (r = t.v), e(r.data), (t.n = 3);
+                      (e = t.v), r(e.data), (t.n = 3);
                       break;
                     case 2:
                       (t.p = 2),
                         (o = t.v),
-                        console.error("Error fetching books:", o);
+                        console.error("Error fetching user reviews:", o);
                     case 3:
-                      return (t.p = 3), n(!1), t.f(3);
+                      return (t.p = 3), a(!1), t.f(3);
                     case 4:
                       return t.a(2);
                   }
@@ -15187,26 +15210,58 @@
               null,
               [[0, 2, 3, 4]]
             );
-          })),
-          function () {
-            var e = this,
-              r = arguments;
-            return new Promise(function (o, n) {
-              var a = t.apply(e, r);
-              function i(t) {
-                Fo(a, o, n, i, l, "next", t);
-              }
-              function l(t) {
-                Fo(a, o, n, i, l, "throw", t);
-              }
-              i(void 0);
-            });
-          });
-      return function () {
-        return r.apply(this, arguments);
-      };
-    })();
-    return o
+          })
+        );
+        return function () {
+          return t.apply(this, arguments);
+        };
+      })(),
+      s = (function () {
+        var t = Mo(
+          Fo().m(function t(o) {
+            var n;
+            return Fo().w(
+              function (t) {
+                for (;;)
+                  switch ((t.p = t.n)) {
+                    case 0:
+                      if (
+                        !window.confirm(
+                          "Are you sure you want to delete this review?"
+                        )
+                      ) {
+                        t.n = 4;
+                        break;
+                      }
+                      return (t.p = 1), (t.n = 2), ko(o);
+                    case 2:
+                      r(
+                        e.filter(function (t) {
+                          return t.id !== o;
+                        })
+                      ),
+                        (t.n = 4);
+                      break;
+                    case 3:
+                      (t.p = 3),
+                        (n = t.v),
+                        console.error("Error deleting review:", n),
+                        alert("Failed to delete review. Please try again.");
+                    case 4:
+                      return t.a(2);
+                  }
+              },
+              t,
+              null,
+              [[1, 3]]
+            );
+          })
+        );
+        return function (e) {
+          return t.apply(this, arguments);
+        };
+      })();
+    return n
       ? l.createElement("div", { className: "text-center" }, "Loading...")
       : l.createElement(
           "div",
@@ -15216,10 +15271,70 @@
             "p",
             null,
             "Welcome to your dashboard! Here you can manage your reviews and see books you've reviewed."
-          )
+          ),
+          l.createElement("h2", null, "Your Reviews"),
+          0 === e.length
+            ? l.createElement("p", null, "You haven't reviewed any books yet.")
+            : l.createElement(
+                "div",
+                { className: "row" },
+                e.map(function (t) {
+                  return l.createElement(
+                    "div",
+                    { key: t.id, className: "col-md-6 mb-4" },
+                    l.createElement(
+                      "div",
+                      { className: "card" },
+                      l.createElement(
+                        "div",
+                        { className: "card-body" },
+                        l.createElement(
+                          "h5",
+                          { className: "card-title" },
+                          t.Book.title
+                        ),
+                        l.createElement(
+                          "h6",
+                          { className: "card-subtitle mb-2 text-muted" },
+                          "by ",
+                          t.Book.author
+                        ),
+                        l.createElement(
+                          "p",
+                          { className: "card-text" },
+                          "Genre: ",
+                          t.Book.genre
+                        ),
+                        l.createElement(
+                          "p",
+                          { className: "card-text" },
+                          "Rating: ",
+                          t.rating,
+                          "/5"
+                        ),
+                        l.createElement(
+                          "p",
+                          { className: "card-text" },
+                          t.review
+                        ),
+                        l.createElement(
+                          "button",
+                          {
+                            className: "btn btn-danger btn-sm",
+                            onClick: function () {
+                              return s(t.id);
+                            },
+                          },
+                          "Delete Review"
+                        )
+                      )
+                    )
+                  );
+                })
+              )
         );
   };
-  function Do() {
+  function Go() {
     var t,
       e,
       r = "function" == typeof Symbol ? Symbol : {},
@@ -15229,7 +15344,7 @@
       var s = o && o.prototype instanceof l ? o : l,
         d = Object.create(s.prototype);
       return (
-        Io(
+        Ho(
           d,
           "_invoke",
           (function (r, o, n) {
@@ -15319,7 +15434,7 @@
     e = Object.getPrototypeOf;
     var c = [][o]
         ? e(e([][o]()))
-        : (Io((e = {}), o, function () {
+        : (Ho((e = {}), o, function () {
             return this;
           }),
           e),
@@ -15328,40 +15443,40 @@
       return (
         Object.setPrototypeOf
           ? Object.setPrototypeOf(t, d)
-          : ((t.__proto__ = d), Io(t, n, "GeneratorFunction")),
+          : ((t.__proto__ = d), Ho(t, n, "GeneratorFunction")),
         (t.prototype = Object.create(u)),
         t
       );
     }
     return (
       (s.prototype = d),
-      Io(u, "constructor", d),
-      Io(d, "constructor", s),
+      Ho(u, "constructor", d),
+      Ho(d, "constructor", s),
       (s.displayName = "GeneratorFunction"),
-      Io(d, n, "GeneratorFunction"),
-      Io(u),
-      Io(u, n, "Generator"),
-      Io(u, o, function () {
+      Ho(d, n, "GeneratorFunction"),
+      Ho(u),
+      Ho(u, n, "Generator"),
+      Ho(u, o, function () {
         return this;
       }),
-      Io(u, "toString", function () {
+      Ho(u, "toString", function () {
         return "[object Generator]";
       }),
-      (Do = function () {
+      (Go = function () {
         return { w: a, m: p };
       })()
     );
   }
-  function Io(t, e, r, o) {
+  function Ho(t, e, r, o) {
     var n = Object.defineProperty;
     try {
       n({}, "", {});
     } catch (t) {
       n = 0;
     }
-    (Io = function (t, e, r, o) {
+    (Ho = function (t, e, r, o) {
       function a(e, r) {
-        Io(t, e, function (t) {
+        Ho(t, e, function (t) {
           return this._invoke(e, r, t);
         });
       }
@@ -15376,9 +15491,9 @@
           : (t[e] = r)
         : (a("next", 0), a("throw", 1), a("return", 2));
     }),
-      Io(t, e, r, o);
+      Ho(t, e, r, o);
   }
-  function $o(t, e, r, o, n, a, i) {
+  function Wo(t, e, r, o, n, a, i) {
     try {
       var l = t[a](i),
         s = l.value;
@@ -15387,7 +15502,7 @@
     }
     l.done ? e(s) : Promise.resolve(s).then(o, n);
   }
-  function Go(t, e) {
+  function Vo(t, e) {
     return (
       (function (t) {
         if (Array.isArray(t)) return t;
@@ -15432,7 +15547,7 @@
       })(t, e) ||
       (function (t, e) {
         if (t) {
-          if ("string" == typeof t) return Ho(t, e);
+          if ("string" == typeof t) return qo(t, e);
           var r = {}.toString.call(t).slice(8, -1);
           return (
             "Object" === r && t.constructor && (r = t.constructor.name),
@@ -15440,7 +15555,7 @@
               ? Array.from(t)
               : "Arguments" === r ||
                 /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(r)
-              ? Ho(t, e)
+              ? qo(t, e)
               : void 0
           );
         }
@@ -15452,33 +15567,34 @@
       })()
     );
   }
-  function Ho(t, e) {
+  function qo(t, e) {
     (null == e || e > t.length) && (e = t.length);
     for (var r = 0, o = Array(e); r < e; r++) o[r] = t[r];
     return o;
   }
-  const Wo = function () {
-    var t = Go((0, l.useState)(""), 2),
+  const Qo = function () {
+    var t = Vo((0, l.useState)(""), 2),
       e = t[0],
       r = t[1],
-      o = Go((0, l.useState)(""), 2),
+      o = Vo((0, l.useState)(""), 2),
       n = o[0],
       a = o[1],
-      i = Go((0, l.useState)(""), 2),
+      i = Vo((0, l.useState)(""), 2),
       s = i[0],
       d = i[1],
-      c = Go((0, l.useState)(""), 2),
+      c = Vo((0, l.useState)(""), 2),
       u = c[0],
       p = c[1],
-      b = Go((0, l.useState)(""), 2),
+      b = Vo((0, l.useState)(""), 2),
       m = b[0],
       f = b[1],
       g = et(),
       v = (function () {
         var t,
           r =
-            ((t = Do().m(function t(r) {
-              return Do().w(
+            ((t = Go().m(function t(r) {
+              var o, a;
+              return Go().w(
                 function (t) {
                   for (;;)
                     switch ((t.p = t.n)) {
@@ -15498,9 +15614,14 @@
                         break;
                       case 3:
                         (t.p = 3),
-                          t.v,
+                          (a = t.v),
                           p(
-                            "Failed to add book. Make sure you have admin privileges."
+                            (null === (o = a.response) ||
+                            void 0 === o ||
+                            null === (o = o.data) ||
+                            void 0 === o
+                              ? void 0
+                              : o.message) || "Failed to add book"
                           );
                       case 4:
                         return t.a(2);
@@ -15517,10 +15638,10 @@
               return new Promise(function (o, n) {
                 var a = t.apply(e, r);
                 function i(t) {
-                  $o(a, o, n, i, l, "next", t);
+                  Wo(a, o, n, i, l, "next", t);
                 }
                 function l(t) {
-                  $o(a, o, n, i, l, "throw", t);
+                  Wo(a, o, n, i, l, "throw", t);
                 }
                 i(void 0);
               });
@@ -15592,12 +15713,12 @@
       )
     );
   };
-  function Vo(t, e) {
+  function Ko(t, e) {
     (null == e || e > t.length) && (e = t.length);
     for (var r = 0, o = Array(e); r < e; r++) o[r] = t[r];
     return o;
   }
-  const qo = function () {
+  const Xo = function () {
     var t,
       e,
       r =
@@ -15650,7 +15771,7 @@
           })(t, e) ||
           (function (t, e) {
             if (t) {
-              if ("string" == typeof t) return Vo(t, e);
+              if ("string" == typeof t) return Ko(t, e);
               var r = {}.toString.call(t).slice(8, -1);
               return (
                 "Object" === r && t.constructor && (r = t.constructor.name),
@@ -15658,7 +15779,7 @@
                   ? Array.from(t)
                   : "Arguments" === r ||
                     /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(r)
-                  ? Vo(t, e)
+                  ? Ko(t, e)
                   : void 0
               );
             }
@@ -15691,7 +15812,7 @@
             null,
             l.createElement(bt, {
               path: "/",
-              element: l.createElement(jo, null),
+              element: l.createElement(Ro, null),
             }),
             l.createElement(bt, {
               path: "/login",
@@ -15707,18 +15828,18 @@
             }),
             l.createElement(bt, {
               path: "/books/:id",
-              element: l.createElement(To, null),
+              element: l.createElement(Lo, null),
             }),
             l.createElement(bt, {
               path: "/dashboard",
               element: o
-                ? l.createElement(Mo, null)
+                ? l.createElement($o, null)
                 : l.createElement(pt, { to: "/login" }),
             }),
             l.createElement(bt, {
               path: "/add-book",
               element: o
-                ? l.createElement(Wo, null)
+                ? l.createElement(Qo, null)
                 : l.createElement(pt, { to: "/login" }),
             })
           )
@@ -15726,34 +15847,34 @@
       )
     );
   };
-  var Qo = n(72),
-    Ko = n.n(Qo),
-    Xo = n(825),
-    Yo = n.n(Xo),
-    Jo = n(659),
-    Zo = n.n(Jo),
-    tn = n(56),
-    en = n.n(tn),
-    rn = n(159),
-    on = n.n(rn),
-    nn = n(113),
-    an = n.n(nn),
-    ln = n(261),
-    sn = {};
-  (sn.styleTagTransform = an()),
-    (sn.setAttributes = en()),
-    (sn.insert = Zo().bind(null, "head")),
-    (sn.domAPI = Yo()),
-    (sn.insertStyleElement = on()),
-    Ko()(ln.A, sn),
-    ln.A && ln.A.locals && ln.A.locals,
+  var Yo = n(72),
+    Jo = n.n(Yo),
+    Zo = n(825),
+    tn = n.n(Zo),
+    en = n(659),
+    rn = n.n(en),
+    on = n(56),
+    nn = n.n(on),
+    an = n(159),
+    ln = n.n(an),
+    sn = n(113),
+    dn = n.n(sn),
+    cn = n(261),
+    un = {};
+  (un.styleTagTransform = dn()),
+    (un.setAttributes = nn()),
+    (un.insert = rn().bind(null, "head")),
+    (un.domAPI = tn()),
+    (un.insertStyleElement = ln()),
+    Jo()(cn.A, un),
+    cn.A && cn.A.locals && cn.A.locals,
     d
       .createRoot(document.getElementById("root"))
       .render(
         l.createElement(
           l.StrictMode,
           null,
-          l.createElement(yt, null, l.createElement(qo, null))
+          l.createElement(yt, null, l.createElement(Xo, null))
         )
       );
 })();
