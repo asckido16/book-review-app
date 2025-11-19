@@ -1,10 +1,12 @@
 export default {
   async up(queryInterface, Sequelize) {
     const bcrypt = (await import("bcryptjs")).default;
-    const hashedPassword = await bcrypt.hash("admin123", 10);
+    const adminUsername = process.env.ADMIN_USERNAME;
+    const adminPassword = process.env.ADMIN_PASSWORD;
+    const hashedPassword = await bcrypt.hash(adminPassword, 10);
     await queryInterface.bulkInsert("Users", [
       {
-        username: "admin",
+        username: adminUsername,
         password: hashedPassword,
         role: "admin",
         createdAt: new Date(),
@@ -14,6 +16,7 @@ export default {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete("Users", { username: "admin" });
+    const adminUsername = process.env.ADMIN_USERNAME;
+    await queryInterface.bulkDelete("Users", { username: adminUsername });
   },
 };
