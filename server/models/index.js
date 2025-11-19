@@ -16,6 +16,10 @@ const env = process.env.NODE_ENV || "development";
 const config = require(__dirname + "/../config/config.json")[env];
 const db = {};
 
+if (env === "production" && !process.env.DATABASE_URL) {
+  process.env.DATABASE_URL = "sqlite://./database_prod.sqlite";
+}
+
 let sequelize;
 sequelize = new Sequelize(
   config.database,
