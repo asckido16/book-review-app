@@ -29,6 +29,9 @@ module.exports = {
     extensions: [".js", ".jsx"],
   },
   plugins: [
+    new HtmlWebpackPlugin({
+      template: "./public/index.html",
+    }),
     new webpack.DefinePlugin({
       process: {
         env: {
