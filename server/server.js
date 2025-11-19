@@ -1,14 +1,15 @@
+import dotenv from "dotenv";
+
+dotenv.config();
+
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import { sequelizeInstance as sequelize } from "./models/index.js";
 import authRoutes from "./routes/auth.js";
 import bookRoutes from "./routes/books.js";
 import reviewRoutes from "./routes/reviews.js";
-
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;

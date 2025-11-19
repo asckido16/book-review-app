@@ -6,19 +6,21 @@ import Sequelize from "sequelize";
 import process from "process";
 import { fileURLToPath } from "url";
 import { createRequire } from "module";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const require = createRequire(import.meta.url);
 
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || "development";
-const config = require(__dirname + "/../config/config.json")[env];
+const configModule = (await import("../config/config.js")).default;
+const config = configModule[env];
 const db = {};
 
 let sequelize;
 if (config.use_env_variable) {
-  // prefer the configured env var name, but fall back to a generic DATABASE_URL
   const dbUrl =
     process.env[config.use_env_variable] || process.env.DATABASE_URL;
   const expectedKey = config.use_env_variable || "DATABASE_URL";
