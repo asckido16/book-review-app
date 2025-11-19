@@ -24,10 +24,23 @@ if (config.use_env_variable) {
   const dbUrl =
     process.env[config.use_env_variable] || process.env.DATABASE_URL;
   const expectedKey = config.use_env_variable || "DATABASE_URL";
+  console.log(
+    `DB config: env='${env}', using env var '${expectedKey}' -> ${
+      dbUrl ? "present" : "missing"
+    }`
+  );
   if (!dbUrl) {
     throw new Error(
       `Environment variable ${expectedKey} is not set. Please set the ${expectedKey} environment variable for production.`
     );
+  }
+  // Ensure SSL options are present for production connections (Railway)
+  if (env === "production") {
+    config.dialectOptions = config.dialectOptions || {};
+    config.dialectOptions.ssl = config.dialectOptions.ssl || {
+      require: true,
+      rejectUnauthorized: false,
+    };
   }
   sequelize = new Sequelize(dbUrl, config);
 } else {
