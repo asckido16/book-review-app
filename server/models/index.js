@@ -18,10 +18,13 @@ const db = {};
 
 let sequelize;
 if (config.use_env_variable) {
-  const dbUrl = process.env[config.use_env_variable];
+  // prefer the configured env var name, but fall back to a generic DATABASE_URL
+  const dbUrl =
+    process.env[config.use_env_variable] || process.env.DATABASE_URL;
+  const expectedKey = config.use_env_variable || "DATABASE_URL";
   if (!dbUrl) {
     throw new Error(
-      `Environment variable ${config.use_env_variable} is not set. Please set the DATABASE_URL environment variable for production.`
+      `Environment variable ${expectedKey} is not set. Please set the ${expectedKey} environment variable for production.`
     );
   }
   sequelize = new Sequelize(dbUrl, config);
