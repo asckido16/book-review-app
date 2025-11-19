@@ -18,7 +18,11 @@ const db = {};
 
 let sequelize;
 if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
+  const dbUrl = process.env[config.use_env_variable];
+  if (!dbUrl) {
+    throw new Error(`Environment variable ${config.use_env_variable} is not set. Please set the DATABASE_URL environment variable for production.`);
+  }
+  sequelize = new Sequelize(dbUrl, config);
 } else {
   sequelize = new Sequelize(
     config.database,
