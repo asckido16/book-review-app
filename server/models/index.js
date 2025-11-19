@@ -16,17 +16,23 @@ const env = process.env.NODE_ENV || "development";
 const config = require(__dirname + "/../config/config.json")[env];
 const db = {};
 
-if (env === "production" && !process.env.DATABASE_URL) {
-  process.env.DATABASE_URL = "sqlite://./database_prod.sqlite";
-}
-
 let sequelize;
-sequelize = new Sequelize(
-  config.database,
-  config.username,
-  config.password,
-  config
-);
+if (config.use_env_variable) {
+  const dbUrl = process.env[config.use_env_variable];
+  if (!dbUrl) {
+    throw new Error(
+      `Environment variable ${config.use_env_variable} is not set. Please set the DATABASE_URL environment variable for production.`
+    );
+  }
+  sequelize = new Sequelize(dbUrl, config);
+} else {
+  sequelize = new Sequelize(
+    config.database,
+    config.username,
+    config.password,
+    config
+  );
+}
 
 const files = fs.readdirSync(__dirname).filter((file) => {
   return (
