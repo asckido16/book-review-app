@@ -117,6 +117,7 @@ app.use(
     origin: [
       "http://localhost:3000",
       "https://book-review-app-taupe.vercel.app",
+      "https://book-review-app-production-b4b6.up.railway.app",
     ],
     credentials: true,
   })
