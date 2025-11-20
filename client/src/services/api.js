@@ -1,11 +1,20 @@
 import axios from "axios";
 import { getAuthHeaders } from "./auth";
 
-const API_URL = process.env.REACT_APP_API_URL;
+// Use explicit environment variable for API base URL.
+// If not provided, fall back to localhost for local development.
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+// Opt-in toggle for sending credentials (cookies) with requests.
+const API_USE_CREDENTIALS =
+  process.env.REACT_APP_API_USE_CREDENTIALS === "true";
 
 const api = axios.create({
   baseURL: API_URL,
 });
+
+if (API_USE_CREDENTIALS) {
+  api.defaults.withCredentials = true;
+}
 
 api.interceptors.request.use((config) => {
   const headers = getAuthHeaders();
