@@ -58,12 +58,6 @@ const swaggerDefinition = {
           genre: {
             type: "string",
           },
-          description: {
-            type: "string",
-          },
-          publishedYear: {
-            type: "integer",
-          },
           createdAt: {
             type: "string",
             format: "date-time",
@@ -127,6 +121,8 @@ const CORS_ALLOW_CREDENTIALS = process.env.CORS_ALLOW_CREDENTIALS === "true";
 const corsOptions = {
   origin: CORS_ORIGIN === "*" ? true : CORS_ORIGIN,
   credentials: CORS_ALLOW_CREDENTIALS,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 };
 
 app.use(cors(corsOptions));

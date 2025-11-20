@@ -1,79 +1,85 @@
-import { Book, Review, User } from "../models/index.js";
+import Book from "../models/book.js";
 import { Op } from "sequelize";
 
-const getBooks = async (req, res) => {
+export const getBooks = async (req, res) => {
   try {
     const { search } = req.query;
-    let where = {};
+    let whereClause = {};
+
     if (search) {
-      where = {
+      whereClause = {
         [Op.or]: [
-          { title: { [Op.iLike]: `%${search}%` } },
-          { author: { [Op.iLike]: `%${search}%` } },
+          { title: { [Op.iLike]: `%${search}%` } }, // Case-insensitive search for title
+          { author: { [Op.iLike]: `%${search}%` } }, // Case-insensitive search for author
+          { genre: { [Op.iLike]: `%${search}%` } }, // Case-insensitive search for genre
         ],
       };
     }
-    const books = await Book.findAll({
-      where,
-      include: [
-        {
-          model: Review,
-          attributes: ["rating"],
-        },
-      ],
-    });
 
-    const booksWithAvgRating = books.map((book) => {
-      const ratings = book.Reviews.map((review) => review.rating);
-      const avgRating =
-        ratings.length > 0
-          ? ratings.reduce((a, b) => a + b) / ratings.length
-          : 0;
-      return {
-        ...book.toJSON(),
-        avgRating: parseFloat(avgRating.toFixed(1)),
-      };
-    });
-
-    res.json(booksWithAvgRating);
+    const books = await Book.findAll({ where: whereClause });
+    res.status(200).json(books);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error fetching books:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
-const getBook = async (req, res) => {
+export const getBook = async (req, res) => {
   try {
-    const book = await Book.findByPk(req.params.id, {
-      include: [
-        {
-          model: Review,
-          include: [{ model: User, attributes: ["username"] }],
-        },
-      ],
-    });
+    const { id } = req.params;
+    const book = await Book.findByPk(id);
     if (!book) {
-      return res.status(404).json({ message: "Book not found" });
+      return res.status(404).json({ error: "Book not found" });
     }
-    const ratings = book.Reviews.map((review) => review.rating);
-    const avgRating =
-      ratings.length > 0 ? ratings.reduce((a, b) => a + b) / ratings.length : 0;
-    res.json({
-      ...book.toJSON(),
-      avgRating: parseFloat(avgRating.toFixed(1)),
-    });
+    res.status(200).json(book);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error fetching book:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
-const createBook = async (req, res) => {
+export const createBook = async (req, res) => {
   try {
     const { title, author, genre } = req.body;
-    const book = await Book.create({ title, author, genre });
-    res.status(201).json(book);
+    const newBook = await Book.create({
+      title,
+      author,
+      genre,
+    });
+    res.status(201).json(newBook);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error("Error creating book:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
-export default { getBooks, getBook, createBook };
+export const updateBook = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, author, genre } = req.body;
+    const book = await Book.findByPk(id);
+    if (!book) {
+      return res.status(404).json({ error: "Book not found" });
+    }
+    await book.update({ title, author, genre });
+    res.status(200).json(book);
+  } catch (error) {
+    console.error("Error updating book:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const deleteBook = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const book = await Book.findByPk(id);
+    if (!book) {
+      return res.status(404).json({ error: "Book not found" });
+    }
+    await book.destroy();
+    res.status(200).json({ message: "Book deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting book:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};

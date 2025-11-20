@@ -1,6 +1,10 @@
 import express from "express";
 const router = express.Router();
-import bookController from "../controllers/bookController.js";
+import {
+  getBooks,
+  getBook,
+  createBook,
+} from "../controllers/bookController.js";
 import reviewController from "../controllers/reviewController.js";
 import { authenticateToken, authorizeAdmin } from "../middleware/auth.js";
 
@@ -38,7 +42,7 @@ import { authenticateToken, authorizeAdmin } from "../middleware/auth.js";
  *                 currentPage:
  *                   type: integer
  */
-router.get("/", bookController.getBooks);
+router.get("/", getBooks);
 
 /**
  * @swagger
@@ -63,7 +67,7 @@ router.get("/", bookController.getBooks);
  *       404:
  *         description: Book not found
  */
-router.get("/:id", bookController.getBook);
+router.get("/:id", getBook);
 
 /**
  * @swagger
@@ -102,7 +106,7 @@ router.get("/:id", bookController.getBook);
  *       403:
  *         description: Forbidden - Admin access required
  */
-router.post("/", authenticateToken, authorizeAdmin, bookController.createBook);
+router.post("/", authenticateToken, authorizeAdmin, createBook);
 
 /**
  * @swagger
