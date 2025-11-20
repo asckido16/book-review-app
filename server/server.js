@@ -112,20 +112,7 @@ const swaggerSpec = swaggerJSDoc(options);
 // Swagger UI route
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// CORS configuration: allow configuring allowed origin and credential support via env vars.
-// In production, set `CORS_ORIGIN` to your frontend origin (e.g. https://your-app.vercel.app)
-// and `CORS_ALLOW_CREDENTIALS=true` if you need to send cookies/credentials.
-const CORS_ORIGIN = process.env.CORS_ORIGIN || "*";
-const CORS_ALLOW_CREDENTIALS = process.env.CORS_ALLOW_CREDENTIALS === "true";
-
-const corsOptions = {
-  origin: CORS_ORIGIN === "*" ? true : CORS_ORIGIN,
-  credentials: CORS_ALLOW_CREDENTIALS,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-};
-
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
