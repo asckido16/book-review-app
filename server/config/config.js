@@ -23,11 +23,12 @@ export default {
         require: true,
         rejectUnauthorized: false,
       },
+      connectTimeout: 60000, // 60 seconds
     },
     pool: {
       max: 5,
       min: 0,
-      acquire: 30000,
+      acquire: 60000, // 60 seconds
       idle: 10000,
     },
   },
