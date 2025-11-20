@@ -1,22 +1,28 @@
-export default {
+﻿export default {
   async up(queryInterface, Sequelize) {
-    const bcrypt = (await import("bcryptjs")).default;
     const adminUsername = process.env.ADMIN_USERNAME;
     const adminPassword = process.env.ADMIN_PASSWORD;
-    const hashedPassword = await bcrypt.hash(adminPassword, 10);
-    await queryInterface.bulkInsert("Users", [
-      {
-        username: adminUsername,
-        password: hashedPassword,
-        role: "admin",
+
+    // Load the models and use the User model to perform an idempotent insert
+    const modelsModule = await import("../models/index.js");
+    const User = modelsModule.User || modelsModule.default.User;
+
+    // Let the User model hooks hash the password; pass plaintext here
+    await User.findOrCreate({
+      where: { username: adminUsername },
+      defaults: {
+        password: adminPassword,
+        role: 'admin',
         createdAt: new Date(),
         updatedAt: new Date(),
       },
-    ]);
+    });
   },
 
   async down(queryInterface, Sequelize) {
     const adminUsername = process.env.ADMIN_USERNAME;
-    await queryInterface.bulkDelete("Users", { username: adminUsername });
+    const modelsModule = await import("../models/index.js");
+    const User = modelsModule.User || modelsModule.default.User;
+    await User.destroy({ where: { username: adminUsername } });
   },
 };
