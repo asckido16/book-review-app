@@ -1,4 +1,4 @@
-﻿export default {
+export default {
   async up(queryInterface, Sequelize) {
     const adminUsername = process.env.ADMIN_USERNAME;
     const adminPassword = process.env.ADMIN_PASSWORD;
