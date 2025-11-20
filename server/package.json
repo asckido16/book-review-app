@@ -6,9 +6,9 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "sequelize": "npx sequelize-cli",
-    "migrate": "npx sequelize-cli db:migrate",
-    "seed": "npx sequelize-cli db:seed:all",
+    "sequelize": "npm --omit=dev exec sequelize-cli",
+    "migrate": "npm --omit=dev exec sequelize-cli db:migrate",
+    "seed": "npm --omit=dev exec sequelize-cli db:seed:all",
     "postdeploy": "npm run migrate && npm run seed"
   },
   "dependencies": {
