@@ -4,6 +4,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const { sequelize } = require("./models");
+const { swaggerUi, specs } = require("./swagger");
 
 const app = express();
 
@@ -20,6 +21,15 @@ app.use(helmet());
 app.use(morgan("combined"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(specs, {
+    explorer: true,
+    customCss: ".swagger-ui .topbar { display: none }",
+  })
+);
 
 // Routes
 app.use("/api/auth", require("./routes/auth"));
@@ -61,6 +71,10 @@ sequelize
     app.listen(PORT, "0.0.0.0", () => {
       console.log(`Server running on port ${PORT}`);
       console.log(`The Server is running at: http://0.0.0.0:${PORT}/api`);
+      console.log(`Swagger docs: http://0.0.0.0:${PORT}/api-docs`);
+      console.log(
+        `The Server is running at : http://localhost:${PORT}/api: for development`
+      );
     });
   })
   .catch((err) => {
