@@ -1,92 +1,140 @@
-import { Review, User, Book } from "../models/index.js";
+const { Review, Book, User } = require("../models");
+const { Op } = require("sequelize");
 
-const getReviews = async (req, res) => {
+exports.createReview = async (req, res) => {
   try {
-    const reviews = await Review.findAll({
-      where: { book_id: req.params.bookId },
-      include: [{ model: User, attributes: ["username"] }],
+    const { book_id, rating, review } = req.body;
+    const user_id = req.user.id;
+
+    // Check if user already reviewed this book
+    const existingReview = await Review.findOne({
+      where: { book_id, user_id },
     });
-    res.json(reviews);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
 
-const createReview = async (req, res) => {
-  try {
-    const { rating, review } = req.body;
+    if (existingReview) {
+      return res
+        .status(400)
+        .json({ message: "You have already reviewed this book" });
+    }
+
     const newReview = await Review.create({
-      book_id: req.params.bookId,
-      user_id: req.user.id,
+      book_id,
+      user_id,
       rating,
       review,
     });
-    res.status(201).json(newReview);
+
+    // Update book's average rating
+    await updateBookAverageRating(book_id);
+
+    const reviewWithUser = await Review.findByPk(newReview.id, {
+      include: [
+        {
+          model: User,
+          as: "user",
+          attributes: ["id", "username"],
+        },
+      ],
+    });
+
+    res.status(201).json(reviewWithUser);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res
+      .status(500)
+      .json({ message: "Error creating review", error: error.message });
   }
 };
 
-const updateReview = async (req, res) => {
+exports.updateReview = async (req, res) => {
   try {
     const { rating, review } = req.body;
-    const reviewRecord = await Review.findOne({
-      where: { id: req.params.id, user_id: req.user.id },
-    });
+    const reviewRecord = await Review.findByPk(req.params.id);
+
     if (!reviewRecord) {
-      return res
-        .status(404)
-        .json({ message: "Review not found or not authorized" });
+      return res.status(404).json({ message: "Review not found" });
     }
+
+    if (reviewRecord.user_id !== req.user.id && req.user.role !== "admin") {
+      return res.status(403).json({ message: "Access denied" });
+    }
+
     await reviewRecord.update({ rating, review });
-    res.json(reviewRecord);
+    await updateBookAverageRating(reviewRecord.book_id);
+
+    const updatedReview = await Review.findByPk(reviewRecord.id, {
+      include: [
+        {
+          model: User,
+          as: "user",
+          attributes: ["id", "username"],
+        },
+      ],
+    });
+
+    res.json(updatedReview);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res
+      .status(500)
+      .json({ message: "Error updating review", error: error.message });
   }
 };
 
-const deleteReview = async (req, res) => {
+exports.deleteReview = async (req, res) => {
   try {
-    const review = await Review.findOne({
-      where: { id: req.params.id, user_id: req.user.id },
-    });
+    const review = await Review.findByPk(req.params.id);
+
     if (!review) {
-      return res
-        .status(404)
-        .json({ message: "Review not found or not authorized" });
+      return res.status(404).json({ message: "Review not found" });
     }
+
+    if (review.user_id !== req.user.id && req.user.role !== "admin") {
+      return res.status(403).json({ message: "Access denied" });
+    }
+
+    const book_id = review.book_id;
     await review.destroy();
+    await updateBookAverageRating(book_id);
+
     res.json({ message: "Review deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res
+      .status(500)
+      .json({ message: "Error deleting review", error: error.message });
   }
 };
 
-const getUserReviews = async (req, res) => {
+exports.getUserReviews = async (req, res) => {
   try {
     const reviews = await Review.findAll({
       where: { user_id: req.user.id },
       include: [
         {
-          model: User,
-          attributes: ["username"],
-        },
-        {
           model: Book,
-          attributes: ["id", "title", "author", "genre"],
+          as: "book",
         },
       ],
+      order: [["created_at", "DESC"]],
     });
+
     res.json(reviews);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res
+      .status(500)
+      .json({ message: "Error fetching reviews", error: error.message });
   }
 };
 
-export default {
-  getReviews,
-  createReview,
-  updateReview,
-  deleteReview,
-  getUserReviews,
-};
+// Helper function to update book's average rating
+async function updateBookAverageRating(book_id) {
+  const reviews = await Review.findAll({
+    where: { book_id },
+    attributes: [[sequelize.fn("AVG", sequelize.col("rating")), "avgRating"]],
+  });
+
+  const averageRating = parseFloat(reviews[0]?.dataValues.avgRating) || 0;
+
+  await Book.update(
+    { averageRating: averageRating.toFixed(2) },
+    { where: { id: book_id } }
+  );
+}

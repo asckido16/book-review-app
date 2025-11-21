@@ -1,55 +1,58 @@
 import axios from "axios";
-import { getAuthHeaders } from "./auth";
 
-// Use explicit environment variable for API base URL.
-// If not provided, fall back to localhost for local development.
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
-// Opt-in toggle for sending credentials (cookies) with requests.
-const API_USE_CREDENTIALS =
-  process.env.REACT_APP_API_USE_CREDENTIALS === "true";
+const API_BASE_URL =
+  process.env.REACT_APP_API_URL || "http://localhost:5000/api";
 
 const api = axios.create({
-  baseURL: API_URL,
+  baseURL: API_BASE_URL,
 });
 
-if (API_USE_CREDENTIALS) {
-  api.defaults.withCredentials = true;
-}
+// Add token to requests
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
-api.interceptors.request.use((config) => {
-  const headers = getAuthHeaders();
-  config.headers = { ...config.headers, ...headers };
-  return config;
-});
+// Handle token expiration
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  }
+);
 
-export const getBooks = (search = "") => {
-  return api.get(`/books?search=${search}`);
+export const authAPI = {
+  login: (credentials) => api.post("/auth/login", credentials),
+  register: (userData) => api.post("/auth/register", userData),
+  getProfile: () => api.get("/auth/profile"),
 };
 
-export const getBook = (id) => {
-  return api.get(`/books/${id}`);
+export const booksAPI = {
+  getAll: (params) => api.get("/books", { params }),
+  getById: (id) => api.get(`/books/${id}`),
+  create: (bookData) => api.post("/books", bookData),
+  update: (id, bookData) => api.put(`/books/${id}`, bookData),
+  delete: (id) => api.delete(`/books/${id}`),
 };
 
-export const createBook = (bookData) => {
-  return api.post("/books", bookData);
+export const reviewsAPI = {
+  create: (reviewData) => api.post("/reviews", reviewData),
+  update: (id, reviewData) => api.put(`/reviews/${id}`, reviewData),
+  delete: (id) => api.delete(`/reviews/${id}`),
+  getMyReviews: () => api.get("/reviews/my-reviews"),
 };
 
-export const getReviews = (bookId) => {
-  return api.get(`/books/${bookId}/reviews`);
-};
-
-export const getUserReviews = () => {
-  return api.get(`/reviews/user`);
-};
-
-export const createReview = (bookId, reviewData) => {
-  return api.post(`/books/${bookId}/reviews`, reviewData);
-};
-
-export const updateReview = (reviewId, reviewData) => {
-  return api.put(`/reviews/${reviewId}`, reviewData);
-};
-
-export const deleteReview = (reviewId) => {
-  return api.delete(`/reviews/${reviewId}`);
-};
+export default api;

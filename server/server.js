@@ -1,141 +1,71 @@
-import dotenv from "dotenv";
-
-dotenv.config();
-
-import express from "express";
-import cors from "cors";
-import swaggerJSDoc from "swagger-jsdoc";
-import swaggerUi from "swagger-ui-express";
-import { sequelizeInstance as sequelize } from "./models/index.js";
-import authRoutes from "./routes/auth.js";
-import bookRoutes from "./routes/books.js";
-import reviewRoutes from "./routes/reviews.js";
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
+const helmet = require("helmet");
+const morgan = require("morgan");
+const { sequelize } = require("./models");
 
 const app = express();
+
+const corsOptions = {
+  origin: ["http://localhost:3000", "https://your-app-name.vercel.app"],
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
+
+// Middleware
+app.use(helmet());
+app.use(cors());
+app.use(morgan("combined"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Routes
+app.use("/api/auth", require("./routes/auth"));
+app.use("/api/books", require("./routes/books"));
+app.use("/api/reviews", require("./routes/reviews"));
+
+// Health check
+app.get("/api", (req, res) => {
+  res.json({ message: "Book Review API is running!" });
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: "Something went wrong!" });
+});
+
+// 404 handler - CORRECTED: Use a proper catch-all route
+app.use((req, res, next) => {
+  res.status(404).json({
+    message: "Route not found",
+    path: req.originalUrl,
+    method: req.method,
+  });
+});
+
 const PORT = process.env.PORT || 5000;
 
-// Swagger definition
-const swaggerDefinition = {
-  openapi: "3.0.0",
-  info: {
-    title: "Book Review API",
-    version: "1.0.0",
-    description: "API For Managing Books Review",
-  },
-  servers: [
-    {
-      url: "http://localhost:5000",
-      description: "Development server",
-    },
-    {
-      url:
-        process.env.RAILWAY_STATIC_URL ||
-        "https://your-railway-app.up.railway.app",
-      description: "Production server",
-    },
-  ],
-  components: {
-    securitySchemes: {
-      bearerAuth: {
-        type: "http",
-        scheme: "bearer",
-        bearerFormat: "JWT",
-      },
-    },
-    schemas: {
-      Book: {
-        type: "object",
-        properties: {
-          id: {
-            type: "integer",
-          },
-          title: {
-            type: "string",
-          },
-          author: {
-            type: "string",
-          },
-          genre: {
-            type: "string",
-          },
-          createdAt: {
-            type: "string",
-            format: "date-time",
-          },
-          updatedAt: {
-            type: "string",
-            format: "date-time",
-          },
-        },
-      },
-      Review: {
-        type: "object",
-        properties: {
-          id: {
-            type: "integer",
-          },
-          rating: {
-            type: "integer",
-            minimum: 1,
-            maximum: 5,
-          },
-          comment: {
-            type: "string",
-          },
-          bookId: {
-            type: "integer",
-          },
-          userId: {
-            type: "integer",
-          },
-          createdAt: {
-            type: "string",
-            format: "date-time",
-          },
-          updatedAt: {
-            type: "string",
-            format: "date-time",
-          },
-        },
-      },
-    },
-  },
-};
-
-const options = {
-  swaggerDefinition,
-  apis: ["./routes/*.js"],
-};
-
-const swaggerSpec = swaggerJSDoc(options);
-
-// Swagger UI route
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
-app.use(
-  cors({
-    origin: [
-      "http://localhost:3000",
-      "https://book-review-app-taupe.vercel.app",
-      "https://book-review-app-production-b4b6.up.railway.app",
-    ],
-    credentials: true,
-  })
-);
-app.use(express.json());
-
-app.use("/api/auth", authRoutes);
-app.use("/api/books", bookRoutes);
-app.use("/api/reviews", reviewRoutes);
-
+// Database connection and server start
 sequelize
-  .sync()
+  .authenticate()
   .then(() => {
-    console.log("Database connected");
+    console.log("Database connected successfully");
+
+    // Sync database (use { force: true } only in development to reset db)
+    return sequelize.sync({ force: false });
+  })
+  .then(() => {
     app.listen(PORT, () => {
-      console.log(`Server running on address: http://localhost:${PORT}`);
+      console.log(`Server running on port ${PORT}`);
+      console.log(`The Database is running on: http://localhost:${PORT}/api`);
     });
   })
   .catch((err) => {
-    console.error("Unable to connect to the database:", err);
+    console.error("Unable to connect to database:", err);
   });
+
+module.exports = app;

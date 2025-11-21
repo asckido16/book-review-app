@@ -1,16 +1,27 @@
-"use strict";
-import { Model } from "sequelize";
-import bcrypt from 'bcryptjs';
+const { Model } = require("sequelize");
+const bcrypt = require("bcryptjs");
 
-export default (sequelize, DataTypes) => {
+module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
-      User.hasMany(models.Review, { foreignKey: "user_id" });
+      User.hasMany(models.Review, {
+        foreignKey: "user_id",
+        as: "reviews",
+      });
+    }
+
+    validPassword(password) {
+      return bcrypt.compareSync(password, this.password);
     }
   }
 
   User.init(
     {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
       username: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -22,21 +33,22 @@ export default (sequelize, DataTypes) => {
       },
       role: {
         type: DataTypes.ENUM("user", "admin"),
-        allowNull: false,
         defaultValue: "user",
       },
     },
     {
       sequelize,
       modelName: "User",
+      tableName: "users",
+      timestamps: true,
+      createdAt: "created_at",
+      updatedAt: "updated_at",
       hooks: {
         beforeCreate: async (user) => {
-          if (user.password && !user.password.startsWith('$2')) {
-            user.password = await bcrypt.hash(user.password, 10);
-          }
+          user.password = await bcrypt.hash(user.password, 10);
         },
         beforeUpdate: async (user) => {
-          if (typeof user.changed === 'function' && user.changed('password') && !user.password.startsWith('$2')) {
+          if (user.changed("password")) {
             user.password = await bcrypt.hash(user.password, 10);
           }
         },

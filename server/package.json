@@ -1,30 +1,36 @@
 {
   "name": "book-review-server",
   "version": "1.0.0",
+  "description": "Backend server for Book Review application",
   "main": "server.js",
-  "type": "module",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
   "scripts": {
-    "dev": "nodemon server.js",
     "start": "node server.js",
-    "sequelize": "npm --omit=dev exec sequelize-cli",
-    "migrate": "npm --omit=dev exec sequelize-cli db:migrate",
-    "seed": "npm --omit=dev exec sequelize-cli db:seed:all",
-    "postdeploy": "npm run migrate && npm run seed"
+    "dev": "nodemon server.js",
+    "db:create": "npx sequelize-cli db:create",
+    "db:migrate": "npx sequelize-cli db:migrate",
+    "db:seed": "npx sequelize-cli db:seed:all",
+    "db:reset": "npx sequelize-cli db:drop && npx sequelize-cli db:create && npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all",
+    "build": "echo 'No build step needed for Node.js'",
+    "prod": "npm run db:migrate && npm start"
   },
   "dependencies": {
-    "bcryptjs": "^2.4.3",
+    "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
-    "dotenv": "^16.6.1",
-    "express": "^4.19.2",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.1",
     "pg": "^8.16.3",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.37.7",
-    "sequelize-cli": "^6.6.3",
-    "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1"
+    "sequelize": "^6.37.7"
   },
   "devDependencies": {
-    "nodemon": "^3.1.7"
+    "nodemon": "^3.1.11",
+    "sequelize-cli": "^6.6.3"
   }
 }

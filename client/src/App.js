@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -7,52 +7,46 @@ import BookList from "./pages/BookList";
 import BookDetail from "./pages/BookDetail";
 import Dashboard from "./pages/Dashboard";
 import AddBook from "./pages/AddBook";
-import { getToken, removeToken } from "./services/auth";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const token = getToken();
-    if (token) {
-      setIsAuthenticated(true);
+    const token = localStorage.getItem("token");
+    const userData = localStorage.getItem("user");
+    if (token && userData) {
+      setUser(JSON.parse(userData));
     }
   }, []);
 
+  const handleLogin = (userData, token) => {
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(userData));
+    setUser(userData);
+  };
+
   const handleLogout = () => {
-    removeToken();
-    setIsAuthenticated(false);
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setUser(null);
   };
 
   return (
-    <div className="App">
-      <Navbar isAuthenticated={isAuthenticated} onLogout={handleLogout} />
-      <div className="container mt-4">
+    <div className="App min-vh-100 bg-light">
+      <Navbar user={user} onLogout={handleLogout} />
+      <div className="container-fluid">
         <Routes>
           <Route path="/" element={<BookList />} />
-          <Route
-            path="/login"
-            element={
-              isAuthenticated ? (
-                <Navigate to="/" />
-              ) : (
-                <Login setIsAuthenticated={setIsAuthenticated} />
-              )
-            }
-          />
+          <Route path="/login" element={<Login onLogin={handleLogin} />} />
           <Route
             path="/register"
-            element={isAuthenticated ? <Navigate to="/" /> : <Register />}
+            element={<Register onLogin={handleLogin} />}
           />
-          <Route path="/books/:id" element={<BookDetail />} />
-          <Route
-            path="/dashboard"
-            element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/add-book"
-            element={isAuthenticated ? <AddBook /> : <Navigate to="/login" />}
-          />
+          <Route path="/books" element={<BookList />} />
+          <Route path="/books/:id" element={<BookDetail user={user} />} />
+          <Route path="/dashboard" element={<Dashboard user={user} />} />
+          <Route path="/add-book" element={<AddBook user={user} />} />
         </Routes>
       </div>
     </div>

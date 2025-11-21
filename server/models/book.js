@@ -1,15 +1,22 @@
-"use strict";
-import { Model } from "sequelize";
+const { Model } = require("sequelize");
 
-export default (sequelize, DataTypes) => {
+module.exports = (sequelize, DataTypes) => {
   class Book extends Model {
     static associate(models) {
-      Book.hasMany(models.Review, { foreignKey: "book_id" });
+      Book.hasMany(models.Review, {
+        foreignKey: "book_id",
+        as: "reviews",
+      });
     }
   }
 
   Book.init(
     {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
       title: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -26,6 +33,10 @@ export default (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Book",
+      tableName: "books",
+      timestamps: true,
+      createdAt: "created_at",
+      updatedAt: "updated_at",
     }
   );
 

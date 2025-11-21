@@ -1,4 +1,6 @@
-export default {
+require("dotenv").config();
+
+module.exports = {
   development: {
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
@@ -6,14 +8,16 @@ export default {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     dialect: "postgres",
+    logging: false,
   },
   test: {
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME_TEST,
+    database: process.env.DB_NAME + "_test",
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     dialect: "postgres",
+    logging: false,
   },
   production: {
     use_env_variable: "DATABASE_URL",
@@ -23,13 +27,7 @@ export default {
         require: true,
         rejectUnauthorized: false,
       },
-      connectTimeout: 60000, // 60 seconds
     },
-    pool: {
-      max: 5,
-      min: 0,
-      acquire: 60000, // 60 seconds
-      idle: 10000,
-    },
+    logging: false,
   },
 };

@@ -1,79 +1,66 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
 
-const Navbar = ({ isAuthenticated, onLogout }) => {
-  const navigate = useNavigate();
-
+function CustomNavbar({ user, onLogout }) {
   const handleLogout = () => {
     onLogout();
-    navigate("/");
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div className="container">
-        <Link className="navbar-brand" to="/">
-          Book Review App
-        </Link>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav me-auto">
-            <li className="nav-item">
-              <Link className="nav-link" to="/">
-                Books
-              </Link>
-            </li>
-            {isAuthenticated && (
+    <Navbar bg="dark" variant="dark" expand="lg" className="mb-4">
+      <Container>
+        <LinkContainer to="/">
+          <Navbar.Brand>📚 BookReview</Navbar.Brand>
+        </LinkContainer>
+
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="me-auto">
+            <LinkContainer to="/books">
+              <Nav.Link>Books</Nav.Link>
+            </LinkContainer>
+          </Nav>
+
+          <Nav>
+            {user ? (
               <>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/dashboard">
-                    Dashboard
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/add-book">
-                    Add Book
-                  </Link>
-                </li>
-              </>
-            )}
-          </ul>
-          <ul className="navbar-nav">
-            {isAuthenticated ? (
-              <li className="nav-item">
-                <button
-                  className="btn btn-outline-light"
-                  onClick={handleLogout}
+                {user.role === "admin" && (
+                  <LinkContainer to="/add-book">
+                    <Nav.Link>Add Book</Nav.Link>
+                  </LinkContainer>
+                )}
+                <LinkContainer to="/dashboard">
+                  <Nav.Link>Dashboard</Nav.Link>
+                </LinkContainer>
+                <NavDropdown
+                  title={`Welcome, ${user.username}`}
+                  id="user-dropdown"
                 >
-                  Logout
-                </button>
-              </li>
+                  <LinkContainer to="/dashboard">
+                    <NavDropdown.Item>My Profile</NavDropdown.Item>
+                  </LinkContainer>
+                  <NavDropdown.Divider />
+                  <NavDropdown.Item onClick={handleLogout}>
+                    Logout
+                  </NavDropdown.Item>
+                </NavDropdown>
+              </>
             ) : (
               <>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/login">
-                    Login
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/register">
-                    Register
-                  </Link>
-                </li>
+                <LinkContainer to="/login">
+                  <Nav.Link>Login</Nav.Link>
+                </LinkContainer>
+                <LinkContainer to="/register">
+                  <Nav.Link>Register</Nav.Link>
+                </LinkContainer>
               </>
             )}
-          </ul>
-        </div>
-      </div>
-    </nav>
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
   );
-};
+}
 
-export default Navbar;
+export default CustomNavbar;

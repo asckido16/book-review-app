@@ -1,50 +1,76 @@
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import { User } from "../models/index.js";
-import dotenv from "dotenv";
+const jwt = require("jsonwebtoken");
+const { User } = require("../models");
 
-dotenv.config();
+const generateToken = (user) => {
+  return jwt.sign(
+    { id: user.id, username: user.username, role: user.role },
+    process.env.JWT_SECRET,
+    { expiresIn: "24h" }
+  );
+};
 
-const register = async (req, res) => {
+exports.register = async (req, res) => {
   try {
     const { username, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({
-      username,
-      password: hashedPassword,
-      role: "user",
+
+    const existingUser = await User.findOne({ where: { username } });
+    if (existingUser) {
+      return res.status(400).json({ message: "Username already exists" });
+    }
+
+    const user = await User.create({ username, password });
+    const token = generateToken(user);
+
+    res.status(201).json({
+      message: "User created successfully",
+      token,
+      user: {
+        id: user.id,
+        username: user.username,
+        role: user.role,
+      },
     });
-    res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res
+      .status(500)
+      .json({ message: "Error creating user", error: error.message });
   }
 };
 
-const login = async (req, res) => {
+exports.login = async (req, res) => {
   try {
     const { username, password } = req.body;
-    console.log("Login attempt for username:", username);
+
     const user = await User.findOne({ where: { username } });
-    console.log("User found:", user ? "yes" : "no");
-    if (user) {
-      const isMatch = await bcrypt.compare(password, user.password);
-      console.log("Password match:", isMatch);
-      if (!isMatch) {
-        return res.status(401).json({ message: "Invalid credentials" });
-      }
-    } else {
+    if (!user || !user.validPassword(password)) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
-    const token = jwt.sign(
-      { id: user.id, username: user.username, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
-    res.json({ token });
+
+    const token = generateToken(user);
+
+    res.json({
+      message: "Login successful",
+      token,
+      user: {
+        id: user.id,
+        username: user.username,
+        role: user.role,
+      },
+    });
   } catch (error) {
-    console.error("Login error:", error);
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: "Error logging in", error: error.message });
   }
 };
 
-export default { register, login };
+exports.getProfile = async (req, res) => {
+  try {
+    const user = await User.findByPk(req.user.id, {
+      attributes: { exclude: ["password"] },
+    });
+    res.json(user);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error fetching profile", error: error.message });
+  }
+};

@@ -1,6 +1,6 @@
-export default {
+module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Reviews", {
+    await queryInterface.createTable("reviews", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -11,7 +11,7 @@ export default {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "Books",
+          model: "books",
           key: "id",
         },
         onUpdate: "CASCADE",
@@ -21,7 +21,7 @@ export default {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "Users",
+          model: "users",
           key: "id",
         },
         onUpdate: "CASCADE",
@@ -30,27 +30,28 @@ export default {
       rating: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        validate: {
-          min: 1,
-          max: 5,
-        },
       },
       review: {
         type: Sequelize.TEXT,
         allowNull: true,
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
     });
-  },
 
+    await queryInterface.addIndex("reviews", ["book_id", "user_id"], {
+      unique: true,
+    });
+  },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Reviews");
+    await queryInterface.dropTable("reviews");
   },
 };
