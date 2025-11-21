@@ -13,14 +13,13 @@ const corsOptions = {
     "https://book-review-app-steel.vercel.app/",
   ],
   credentials: true,
-  optionsSuccessStatus: 200,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
 };
 
 app.use(cors(corsOptions));
-
-// Middleware
 app.use(helmet());
-app.use(cors());
+//app.use(cors());
 app.use(morgan("combined"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -64,7 +63,9 @@ sequelize
   .then(() => {
     app.listen(PORT, "0.0.0.0", () => {
       console.log(`Server running on port ${PORT}`);
-      console.log(`The Database is running on: http://localhost:${PORT}/api`);
+      console.log(`The Database is running on: http://0.0.0.0:${PORT}/api`);
+      //console.log(`The Database is running on: http://localhost:${PORT}/api`);
+      console.log('CORS enabled for: ${corsOptions.origin.join(", ")}');
     });
   })
   .catch((err) => {
