@@ -16,6 +16,6 @@
     }
   ],
   "env": {
-    "REACT_APP_API_URL": "https://your-backend-app-name.railway.app/api"
+    "REACT_APP_API_URL": "https://book-review-app-production-31b8.up.railway.app/api"
   }
 }

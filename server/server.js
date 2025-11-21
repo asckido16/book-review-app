@@ -8,7 +8,10 @@ const { sequelize } = require("./models");
 const app = express();
 
 const corsOptions = {
-  origin: ["http://localhost:3000", "https://your-app-name.vercel.app"],
+  origin: [
+    "http://localhost:3000",
+    "https://book-review-app-steel.vercel.app/",
+  ],
   credentials: true,
   optionsSuccessStatus: 200,
 };
