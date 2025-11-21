@@ -7,11 +7,9 @@ const { sequelize } = require("./models");
 
 const app = express();
 
+// CORS configuration - MUST come first
 const corsOptions = {
-  origin: [
-    "http://localhost:3000",
-    "https://book-review-app-steel.vercel.app/",
-  ],
+  origin: ["http://localhost:3000", "https://book-review-app-steel.vercel.app"],
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
@@ -19,7 +17,6 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(helmet());
-//app.use(cors());
 app.use(morgan("combined"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -40,7 +37,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: "Something went wrong!" });
 });
 
-// 404 handler - CORRECTED: Use a proper catch-all route
+// 404 handler
 app.use((req, res, next) => {
   res.status(404).json({
     message: "Route not found",
@@ -56,16 +53,14 @@ sequelize
   .authenticate()
   .then(() => {
     console.log("Database connected successfully");
+    console.log("CORS enabled for:", corsOptions.origin.join(", "));
 
-    // Sync database (use { force: true } only in development to reset db)
     return sequelize.sync({ force: false });
   })
   .then(() => {
     app.listen(PORT, "0.0.0.0", () => {
       console.log(`Server running on port ${PORT}`);
-      console.log(`The Database is running on: http://0.0.0.0:${PORT}/api`);
-      //console.log(`The Database is running on: http://localhost:${PORT}/api`);
-      console.log('CORS enabled for: ${corsOptions.origin.join(", ")}');
+      console.log(`The Server is running at: http://0.0.0.0:${PORT}/api`);
     });
   })
   .catch((err) => {
