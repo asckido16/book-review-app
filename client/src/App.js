@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -33,23 +33,25 @@ function App() {
   };
 
   return (
-    <div className="App min-vh-100 bg-light">
-      <Navbar user={user} onLogout={handleLogout} />
-      <div className="container-fluid">
-        <Routes>
-          <Route path="/" element={<BookList />} />
-          <Route path="/login" element={<Login onLogin={handleLogin} />} />
-          <Route
-            path="/register"
-            element={<Register onLogin={handleLogin} />}
-          />
-          <Route path="/books" element={<BookList />} />
-          <Route path="/books/:id" element={<BookDetail user={user} />} />
-          <Route path="/dashboard" element={<Dashboard user={user} />} />
-          <Route path="/add-book" element={<AddBook user={user} />} />
-        </Routes>
+    <Router>
+      <div className="App min-vh-100 bg-light">
+        <Navbar user={user} onLogout={handleLogout} />
+        <div className="container-fluid">
+          <Routes>
+            <Route path="/" element={<BookList />} />
+            <Route path="/login" element={<Login onLogin={handleLogin} />} />
+            <Route
+              path="/register"
+              element={<Register onLogin={handleLogin} />}
+            />
+            <Route path="/books" element={<BookList />} />
+            <Route path="/books/:id" element={<BookDetail user={user} />} />
+            <Route path="/dashboard" element={<Dashboard user={user} />} />
+            <Route path="/add-book" element={<AddBook user={user} />} />
+          </Routes>
+        </div>
       </div>
-    </div>
+    </Router>
   );
 }
 
